@@ -64,6 +64,8 @@ public class DashboardActivity extends AppCompatActivity {
         barEntries.add(new BarEntry(0, 1200)); // January
         barEntries.add(new BarEntry(1, 1500)); // February
         barEntries.add(new BarEntry(2, 1100)); // March
+        barEntries.add(new BarEntry(3, 1900)); // April
+        barEntries.add(new BarEntry(4, 2000)); // Jun
 
         // Data for the pie chart (expense categories)
         List<PieEntry> pieEntries = new ArrayList<>();
@@ -94,7 +96,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         // X-axis customization
         XAxis xAxis = barChart.getXAxis();
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(new String[]{"Jan", "Feb", "Mar"}));
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(new String[]{"Jan", "Feb", "Mar", "Apr","Jun"}));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1f);
         xAxis.setDrawGridLines(false);
