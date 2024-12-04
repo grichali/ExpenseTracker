@@ -1,5 +1,6 @@
 package com.example.expensetracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -44,10 +45,10 @@ public class DashboardActivity extends AppCompatActivity {
         totalBalanceText = findViewById(R.id.total_balance_text);
         addExpenseFab = findViewById(R.id.add_expense_fab);
 
-        // Set up Floating Action Button (FAB)
         addExpenseFab.setOnClickListener(v -> {
-            Toast.makeText(this, "Add Expense Clicked", Toast.LENGTH_SHORT).show();
-            // TODO: Open Add Expense Activity or Bottom Sheet
+            // Create an Intent to open AddExpenseActivity
+            Intent intent = new Intent(DashboardActivity.this, AddExpenseActivity.class);
+            startActivity(intent);
         });
 
         // Fetch and set dynamic data

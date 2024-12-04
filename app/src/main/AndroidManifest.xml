@@ -27,6 +27,6 @@
             android:exported="false" />
         <activity
             android:name=".DashboardActivity" />
-
+        <activity android:name=".AddExpenseActivity"/>
     </application>
 </manifest>
