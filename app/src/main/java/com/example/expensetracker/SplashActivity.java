@@ -18,7 +18,7 @@ public class SplashActivity extends AppCompatActivity {
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             // Navigate to Dashboard
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
             startActivity(intent);
             finish(); // Close SplashActivity
         }, 3000); // 3 sec delay
