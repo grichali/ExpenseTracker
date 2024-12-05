@@ -139,5 +139,15 @@
         android:text="Add Expense"
         app:layout_anchorGravity="bottom|end"/>
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/view_history_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="16dp"
+        android:text="View History"
+        app:layout_anchorGravity="bottom|start" />
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
