@@ -3,6 +3,7 @@ package com.example.expensetracker;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,23 +37,24 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        // Setup Toolbar
-
-
-        // Initialize UI components
         barChart = findViewById(R.id.bar_chart);
         pieChart = findViewById(R.id.pie_chart);
         totalBalanceText = findViewById(R.id.total_balance_text);
         addExpenseFab = findViewById(R.id.add_expense_fab);
 
         addExpenseFab.setOnClickListener(v -> {
-            // Create an Intent to open AddExpenseActivity
             Intent intent = new Intent(DashboardActivity.this, AddExpenseActivity.class);
             startActivity(intent);
         });
+        Button viewHistoryButton = findViewById(R.id.view_history_fab);
 
-        // Fetch and set dynamic data
+        viewHistoryButton.setOnClickListener(v -> {
+            // Create an Intent to open ExpenseHistoryActivity
+            Intent intent = new Intent(DashboardActivity.this, ExpenseHistoryActivity.class);
+            startActivity(intent);
+        });
         setDynamicData();
+
     }
 
     private void setDynamicData() {
