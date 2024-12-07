@@ -21,6 +21,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import java.util.List;
 public class DashboardActivity extends AppCompatActivity {
     private BarChart barChart;
     private PieChart pieChart;
-    private ExtendedFloatingActionButton addExpenseFab;
+    private MaterialButton addExpenseFab;
     private TextView totalBalanceText;
 
     @Override
@@ -54,6 +55,14 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
         setDynamicData();
+
+        Button viewBudgetButton = findViewById(R.id.view_budget_fab);
+
+        // Set the OnClickListener to navigate to BudgetActivity
+        viewBudgetButton.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, BudgetActivity.class);
+            startActivity(intent);
+        });
 
     }
 

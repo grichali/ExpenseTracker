@@ -29,5 +29,7 @@
             android:name=".DashboardActivity" />
         <activity android:name=".AddExpenseActivity"/>
         <activity android:name=".ExpenseHistoryActivity"/>
+        <activity android:name=".BudgetActivity" />
+
     </application>
 </manifest>
