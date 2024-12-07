@@ -58,9 +58,19 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void setDynamicData() {
-        // Fetch dynamic data directly from the class (e.g., database or API)
-        // Here, I’m using hardcoded values for the sake of this example.
-        // You can replace this with real-time data fetch logic.
+        // Hardcoded Budget Data
+        Budget budget = new Budget(1, 500.00, "2024-12-01", "2024-12-07");
+        String budgetInfo = "Budget: $" + budget.getAmount() + " (" + budget.getStartDate() + " to " + budget.getEndDate() + ")";
+
+        // Update UI with budget info
+        TextView budgetTextView = findViewById(R.id.budget_text_view); // Add a TextView in your XML for this
+        budgetTextView.setText(budgetInfo);
+
+        // Hardcoded Expenses Data
+        List<Expense> expenses = new ArrayList<>();
+        expenses.add(new Expense(1, "Lunch", "Food", "2024-12-01"));
+        expenses.add(new Expense(2, "Bus Ticket", "Transport", "2024-12-02"));
+        expenses.add(new Expense(3, "Netflix Subscription", "Entertainment", "2024-12-03"));
 
         // Data for the bar chart (monthly expenses)
         List<BarEntry> barEntries = new ArrayList<>();
@@ -85,7 +95,6 @@ public class DashboardActivity extends AppCompatActivity {
         setupBarChart(barEntries);
         setupPieChart(pieEntries);
     }
-
     private void setupBarChart(List<BarEntry> entries) {
         BarDataSet dataSet = new BarDataSet(entries, "Monthly Expenses");
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);

@@ -67,6 +67,15 @@
                         android:textColor="#000000"
                         android:textSize="24sp"
                         android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/budget_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Budget: $500.00 (2024-12-01 to 2024-12-07)"
+                        android:textColor="#000000"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="16dp"/>
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

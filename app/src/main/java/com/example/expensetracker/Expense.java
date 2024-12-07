@@ -17,6 +17,8 @@ public class Expense {
     public int getId() {
         return id;
     }
+
+
     public String getName() {
         return name;
     }
@@ -27,5 +29,21 @@ public class Expense {
 
     public String getDate() {
         return date;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

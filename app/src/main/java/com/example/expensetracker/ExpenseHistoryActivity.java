@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -52,8 +54,7 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
             dateTextView.setText(expense.getDate());
 
             editButton.setOnClickListener(v -> {
-                Toast.makeText(this, "Edit ID: " + expense.getId() + " - " + expense.getName(), Toast.LENGTH_SHORT).show();
-                // Implement edit logic here
+                showEditDialog(expense);                // Implement edit logic here
             });
 
             removeButton.setOnClickListener(v -> {
@@ -64,5 +65,55 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
 
             expensesContainer.addView(expenseView);
         }
+    }
+    private void showEditDialog(Expense expense) {
+        // Create an EditText for the name, category, and date
+        final EditText nameEditText = new EditText(this);
+        nameEditText.setText(expense.getName());
+
+        final EditText categoryEditText = new EditText(this);
+        categoryEditText.setText(expense.getCategory());
+
+        final EditText dateEditText = new EditText(this);
+        dateEditText.setText(expense.getDate());
+
+        // Create the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Expense");
+        builder.setMessage("Edit the expense details");
+
+        // Set the layout for the dialog
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.addView(nameEditText);
+        layout.addView(categoryEditText);
+        layout.addView(dateEditText);
+
+        builder.setView(layout);
+
+        // Handle the Save button click
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            // Update the expense data
+            expense.setName(nameEditText.getText().toString());
+            expense.setCategory(categoryEditText.getText().toString());
+            expense.setDate(dateEditText.getText().toString());
+
+            // Show a Toast with the updated data
+            Toast.makeText(this, "Updated Expense: " + expense.getName() + ", " + expense.getCategory() + ", " + expense.getDate(), Toast.LENGTH_SHORT).show();
+
+            // Refresh the expenses list and UI (you can call displayExpenses or update a single view)
+            refreshExpensesUI();
+        });
+
+        // Handle the Cancel button click
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        builder.show();
+    }
+
+    private void refreshExpensesUI() {
+        expensesContainer.removeAllViews();
+        List<Expense> updatedExpenses = getDummyExpenses();  // Get updated data
+        displayExpenses(updatedExpenses);  // Display the updated list
     }
 }
