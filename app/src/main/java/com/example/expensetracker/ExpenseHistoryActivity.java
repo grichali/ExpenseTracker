@@ -31,9 +31,9 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
     private List<Expense> getDummyExpenses() {
         // Replace this with actual data from a database or API
         List<Expense> expenses = new ArrayList<>();
-        expenses.add(new Expense("Lunch", "Food", "2024-12-01"));
-        expenses.add(new Expense("Bus Ticket", "Transport", "2024-12-02"));
-        expenses.add(new Expense("Netflix Subscription", "Entertainment", "2024-12-03"));
+        expenses.add(new Expense(1, "Lunch", "Food", "2024-12-01"));
+        expenses.add(new Expense(2, "Bus Ticket", "Transport", "2024-12-02"));
+        expenses.add(new Expense(3, "Netflix Subscription", "Entertainment", "2024-12-03"));
         return expenses;
     }
 
@@ -52,12 +52,12 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
             dateTextView.setText(expense.getDate());
 
             editButton.setOnClickListener(v -> {
-                Toast.makeText(this, "Edit " + expense.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Edit ID: " + expense.getId() + " - " + expense.getName(), Toast.LENGTH_SHORT).show();
                 // Implement edit logic here
             });
 
             removeButton.setOnClickListener(v -> {
-                Toast.makeText(this, "Remove " + expense.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Remove ID: " + expense.getId() + " - " + expense.getName(), Toast.LENGTH_SHORT).show();
                 expensesContainer.removeView(expenseView); // Remove item from UI
                 // Implement additional remove logic if needed
             });

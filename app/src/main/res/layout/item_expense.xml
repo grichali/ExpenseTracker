@@ -39,13 +39,18 @@
             android:id="@+id/edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit" />
+            android:text="Edit"
+            android:backgroundTint="@color/green"
+
+            />
 
         <Button
             android:id="@+id/remove_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Remove"
-            android:layout_marginStart="8dp" />
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/red"
+            />
     </LinearLayout>
 </LinearLayout>
