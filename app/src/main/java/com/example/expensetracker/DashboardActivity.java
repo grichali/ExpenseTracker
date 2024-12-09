@@ -3,6 +3,7 @@ package com.example.expensetracker;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,6 +64,8 @@ public class DashboardActivity extends AppCompatActivity {
             Intent intent = new Intent(DashboardActivity.this, BudgetActivity.class);
             startActivity(intent);
         });
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
 
     }
 
