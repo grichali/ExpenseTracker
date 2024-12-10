@@ -3,7 +3,6 @@ plugins {
     kotlin("android")  // Make sure the Kotlin plugin is applied
     kotlin("kapt")
 }
-
 android {
     namespace = "com.example.expensetracker"
     compileSdk = 34
@@ -27,9 +26,14 @@ android {
             )
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
     }
 }
 

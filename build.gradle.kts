@@ -2,5 +2,4 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     kotlin("kapt") version "1.8.10" apply false
-
 }

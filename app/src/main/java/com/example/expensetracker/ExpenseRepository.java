@@ -13,7 +13,7 @@ public class ExpenseRepository {
     private DBHelper dbHelper;
 
     public ExpenseRepository(Context context) {
-        dbHelper = new DBHelper(context); // DBHelper is a helper class for managing the SQLite database
+        dbHelper = new DBHelper(context);
         database = dbHelper.getWritableDatabase();
     }
 

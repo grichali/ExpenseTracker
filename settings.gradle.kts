@@ -9,9 +9,13 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
-
     }
+    plugins {
+        id("org.jetbrains.kotlin.android") version "2.0.0" // Use a recent version
+    }
+
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -27,6 +31,7 @@ dependencyResolutionManagement {
         google()        // Google repository
         mavenCentral()  // Maven Central repository
     }
+
 }
 
 rootProject.name = "ExpenseTracker"
