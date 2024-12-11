@@ -1,0 +1,12 @@
+<!-- res/values/strings.xml -->
+<resources>
+    <string name="app_name">Expense Tracker</string>
+    <string-array name="expense_categories">
+        <item>Food</item>
+        <item>Transport</item>
+        <item>Entertainment</item>
+        <item>Health</item>
+        <item>Utilities</item>
+        <item>Others</item>
+    </string-array>
+</resources>
