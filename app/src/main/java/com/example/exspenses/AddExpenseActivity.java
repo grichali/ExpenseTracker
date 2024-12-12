@@ -3,7 +3,6 @@ package com.example.exspenses;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,111 +14,67 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Calendar;
 
 public class AddExpenseActivity extends AppCompatActivity {
-
     private EditText etAmount, etDate, etDescription;
     private Spinner spCategory;
     private Button btnSave;
+    private ExpenseRepository expenseRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expense);
 
-        initializeViews();
-        setupCategorySpinner();
-        setupDateField();
-        setupSaveButton();
-    }
-
-    private void initializeViews() {
-        // Initialize EditText fields
         etAmount = findViewById(R.id.etAmount);
         etDate = findViewById(R.id.etDate);
         etDescription = findViewById(R.id.etDescription);
+        Spinner spCategory = findViewById(R.id.spCategory);
 
-        // Initialize the Save button
-        btnSave = findViewById(R.id.btnSave);
+// Get the categories from strings.xml
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.expense_categories, // Name of the string array in strings.xml
+                android.R.layout.simple_spinner_item // Default layout for each item in the spinner
+        );
 
-        // Initialize the Spinner for categories
-        spCategory = findViewById(R.id.spCategory);
-    }
-
-    private void setupCategorySpinner() {
-        // Create an ArrayAdapter for the Spinner with categories
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.expense_categories, android.R.layout.simple_spinner_item);
-
-        // Set the drop-down view style
+// Specify the layout for the dropdown items
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        // Set the adapter for the Spinner
+// Apply the adapter to the spinner
         spCategory.setAdapter(adapter);
+        btnSave = findViewById(R.id.btnSave);
+        expenseRepository = new ExpenseRepository(this);
+        EditText etDate = findViewById(R.id.etDate);
+        etDate.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Set the item selected listener for the Spinner
-        spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // Optionally handle the selected category
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Handle case when nothing is selected
-            }
+            DatePickerDialog datePickerDialog = new DatePickerDialog(AddExpenseActivity.this,
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        // Format and set the date in the EditText
+                        String date = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                        etDate.setText(date);
+                    }, year, month, day);
+            datePickerDialog.show();
         });
-    }
 
-    private void setupDateField() {
-        // Set up the onClickListener for the Date field (EditText)
-        etDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show the DatePickerDialog when the user clicks on the Date field
-                showDatePickerDialog();
-            }
-        });
-    }
-
-    private void setupSaveButton() {
-        // Set up the onClickListener for the Save button
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveExpense();
-            }
-        });
-    }
-
-    private void showDatePickerDialog() {
-        // Get the current date
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        // Create and show the DatePickerDialog
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                AddExpenseActivity.this,
-                (view, year1, month1, dayOfMonth) -> {
-                    // Format the selected date and set it to the Date field
-                    String formattedDate = String.format("%02d/%02d/%d", dayOfMonth, month1 + 1, year1);
-                    etDate.setText(formattedDate);
-                },
-                year, month, day
-        );
-        datePickerDialog.show();
+        btnSave.setOnClickListener(v -> saveExpense());
     }
 
     private void saveExpense() {
-        // Retrieve the values from the EditText fields and Spinner
         String amount = etAmount.getText().toString();
+        String category = spCategory.getSelectedItem().toString();
         String date = etDate.getText().toString();
         String description = etDescription.getText().toString();
-        String category = spCategory.getSelectedItem().toString();
 
-        // Display the entered information using a Toast
-        String message = String.format("Amount: %s\nCategory: %s\nDate: %s\nDescription: %s",
-                amount, category, date, description);
-        Toast.makeText(AddExpenseActivity.this, message, Toast.LENGTH_LONG).show();
+        if (!amount.isEmpty() && !category.isEmpty() && !date.isEmpty()) {
+            Expense newExpense = new Expense(0, amount, category, date);
+            expenseRepository.addExpense(newExpense);
+            Toast.makeText(this, "Expense added!", Toast.LENGTH_SHORT).show();
+            finish();  // Close the activity after saving
+        } else {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+        }
     }
 }

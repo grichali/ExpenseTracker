@@ -1,22 +1,24 @@
 package com.example.exspenses;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ExpenseHistoryActivity extends AppCompatActivity {
     private LinearLayout expensesContainer;
+    private ExpenseRepository expenseRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,19 +26,11 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_expense_history);
 
         expensesContainer = findViewById(R.id.expenses_container);
+        expenseRepository = new ExpenseRepository(this);
 
-        // Add dummy data
-        List<Expense> expenses = getDummyExpenses();
+        // Fetch all expenses from the database
+        List<Expense> expenses = expenseRepository.getAllExpenses();
         displayExpenses(expenses);
-    }
-
-    private List<Expense> getDummyExpenses() {
-        // Replace this with actual data from a database or API
-        List<Expense> expenses = new ArrayList<>();
-        expenses.add(new Expense(1, "Lunch", "Food", "2024-12-01"));
-        expenses.add(new Expense(2, "Bus Ticket", "Transport", "2024-12-02"));
-        expenses.add(new Expense(3, "Netflix Subscription", "Entertainment", "2024-12-03"));
-        return expenses;
     }
 
     private void displayExpenses(List<Expense> expenses) {
@@ -54,20 +48,32 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
             dateTextView.setText(expense.getDate());
 
             editButton.setOnClickListener(v -> {
-                showEditDialog(expense);                // Implement edit logic here
+                showEditDialog(expense); // Implement edit logic here
             });
 
             removeButton.setOnClickListener(v -> {
-                Toast.makeText(this, "Remove ID: " + expense.getId() + " - " + expense.getName(), Toast.LENGTH_SHORT).show();
-                expensesContainer.removeView(expenseView); // Remove item from UI
-                // Implement additional remove logic if needed
+                confirmRemoveExpense(expense, expenseView); // Remove with confirmation
             });
 
             expensesContainer.addView(expenseView);
         }
     }
+
+    private void confirmRemoveExpense(Expense expense, View expenseView) {
+        new AlertDialog.Builder(this)
+                .setTitle("Remove Expense")
+                .setMessage("Are you sure you want to remove this expense?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    expenseRepository.removeExpense(expense.getId());
+                    expensesContainer.removeView(expenseView);
+                    Toast.makeText(this, "Expense removed.", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
     private void showEditDialog(Expense expense) {
-        // Create an EditText for the name, category, and date
+        // Create the EditTexts for the name, category, and date
         final EditText nameEditText = new EditText(this);
         nameEditText.setText(expense.getName());
 
@@ -93,15 +99,18 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
 
         // Handle the Save button click
         builder.setPositiveButton("Save", (dialog, which) -> {
-            // Update the expense data
+            // Update the expense object
             expense.setName(nameEditText.getText().toString());
             expense.setCategory(categoryEditText.getText().toString());
             expense.setDate(dateEditText.getText().toString());
 
-            // Show a Toast with the updated data
-            Toast.makeText(this, "Updated Expense: " + expense.getName() + ", " + expense.getCategory() + ", " + expense.getDate(), Toast.LENGTH_SHORT).show();
+            // Save the updated expense
+            expenseRepository.updateExpense(expense);
 
-            // Refresh the expenses list and UI (you can call displayExpenses or update a single view)
+            // Show a Toast with the updated data
+            Toast.makeText(this, "Expense updated: " + expense.getName(), Toast.LENGTH_SHORT).show();
+
+            // Refresh the expenses list and UI
             refreshExpensesUI();
         });
 
@@ -113,7 +122,7 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
 
     private void refreshExpensesUI() {
         expensesContainer.removeAllViews();
-        List<Expense> updatedExpenses = getDummyExpenses();  // Get updated data
+        List<Expense> updatedExpenses = expenseRepository.getAllExpenses();  // Get updated data
         displayExpenses(updatedExpenses);  // Display the updated list
     }
 }
