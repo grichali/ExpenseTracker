@@ -4,13 +4,17 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BudgetRepository {
-    private SQLiteDatabase database;
-    private DBHelper dbHelper;
+    private final SQLiteDatabase database;
+    private final DBHelper dbHelper;
 
     public BudgetRepository(Context context) {
-        dbHelper = new DBHelper(context); // DBHelper is a helper class for managing the SQLite database
+        dbHelper = new DBHelper(context);
         database = dbHelper.getWritableDatabase();
     }
 
@@ -24,21 +28,35 @@ public class BudgetRepository {
         return database.insert("budgets", null, values);
     }
 
-    // Get a budget by its category
-    public Budget getBudgetById(int id) {
-        Cursor cursor = database.query("budgets", null, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+    // Get all budgets
+    public List<Budget> getAllBudgets() {
+        List<Budget> budgets = new ArrayList<>();
+        Cursor cursor = database.query("budgets", null, null, null, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            int budgetId = cursor.getInt(cursor.getColumnIndex("id"));
-            double amount = cursor.getDouble(cursor.getColumnIndex("amount"));
-            String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
-            String endDate = cursor.getString(cursor.getColumnIndex("endDate"));
+            int idColumnIndex = cursor.getColumnIndex("id");
+            int amountColumnIndex = cursor.getColumnIndex("amount");
+            int startDateColumnIndex = cursor.getColumnIndex("startDate");
+            int endDateColumnIndex = cursor.getColumnIndex("endDate");
+
+            if (idColumnIndex != -1 && amountColumnIndex != -1 && startDateColumnIndex != -1 && endDateColumnIndex != -1) {
+                do {
+                    int budgetId = cursor.getInt(idColumnIndex);
+                    double amount = cursor.getDouble(amountColumnIndex);
+                    String startDate = cursor.getString(startDateColumnIndex);
+                    String endDate = cursor.getString(endDateColumnIndex);
+
+                    Budget budget = new Budget(budgetId, amount, startDate, endDate);
+                    budgets.add(budget);
+                } while (cursor.moveToNext());
+            } else {
+                Log.e("DBHelper", "One or more columns are missing from the cursor.");
+            }
 
             cursor.close();
-            return new Budget(budgetId, amount, startDate, endDate);
         }
 
-        return null;
+        return budgets;
     }
 
     // Update the budget

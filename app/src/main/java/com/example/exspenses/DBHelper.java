@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "expense_tracker.db";
+    private static final String DATABASE_NAME = "expenses.db";
     private static final int DATABASE_VERSION = 1;
 
     // Expense table creation
