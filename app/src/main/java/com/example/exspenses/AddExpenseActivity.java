@@ -1,6 +1,7 @@
 package com.example.exspenses;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -75,6 +76,8 @@ public class AddExpenseActivity extends AppCompatActivity {
                 Expense newExpense = new Expense(0, description, category, date, amount);
                 expenseRepository.addExpense(newExpense);
                 Toast.makeText(this, "Expense added!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(AddExpenseActivity.this, DashboardActivity.class);
+                startActivity(intent);
                 finish();  // Close the activity after saving
             } catch (NumberFormatException e) {
                 Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT).show();
