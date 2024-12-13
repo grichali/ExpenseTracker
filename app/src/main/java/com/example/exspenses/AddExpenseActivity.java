@@ -27,8 +27,7 @@ public class AddExpenseActivity extends AppCompatActivity {
         etAmount = findViewById(R.id.etAmount);
         etDate = findViewById(R.id.etDate);
         etDescription = findViewById(R.id.etDescription);
-        Spinner spCategory = findViewById(R.id.spCategory);
-
+        spCategory = findViewById(R.id.spCategory);
 // Get the categories from strings.xml
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
