@@ -111,7 +111,10 @@ public class DashboardActivity extends AppCompatActivity {
             Log.d("DashboardActivity", "Monthly Expenses: " + monthlyExpenses);
 
             List<BarEntry> barEntries = new ArrayList<>();
-            String[] months = {"Jan", "Feb", "Mar", "Apr", "Jun"};
+            String[] months = {
+                    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+
+            };
             for (int i = 0; i < months.length; i++) {
                 barEntries.add(new BarEntry(i, monthlyExpenses.getOrDefault(months[i], 0f)));
             }
@@ -147,15 +150,15 @@ public class DashboardActivity extends AppCompatActivity {
     // Helper method to extract the month name from a date string
     public String getMonthFromDate(String dateString) {
         // Define the expected format
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); // Adjust to match your date format
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         try {
-            Date date = format.parse(dateString); // Parse the date
-            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM"); // "MMM" will give you a three-letter month abbreviation like "Jan", "Feb", etc.
-            return monthFormat.format(date); // Return the month in abbreviated form (e.g., Jan, Feb, Mar)
+            Date date = format.parse(dateString);
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
+            return monthFormat.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
             Log.e("DashboardActivity", "Error parsing date: " + dateString);
-            return "";  // Return empty string in case of error
+            return "";
         }
     }
 
