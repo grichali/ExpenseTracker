@@ -28,21 +28,23 @@ public class AddExpenseActivity extends AppCompatActivity {
         etDate = findViewById(R.id.etDate);
         etDescription = findViewById(R.id.etDescription);
         spCategory = findViewById(R.id.spCategory);
-// Get the categories from strings.xml
+
+        // Get the categories from strings.xml
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.expense_categories, // Name of the string array in strings.xml
                 android.R.layout.simple_spinner_item // Default layout for each item in the spinner
         );
 
-// Specify the layout for the dropdown items
+        // Specify the layout for the dropdown items
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-// Apply the adapter to the spinner
+        // Apply the adapter to the spinner
         spCategory.setAdapter(adapter);
+
         btnSave = findViewById(R.id.btnSave);
         expenseRepository = new ExpenseRepository(this);
-        EditText etDate = findViewById(R.id.etDate);
+
         etDate.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
@@ -62,16 +64,21 @@ public class AddExpenseActivity extends AppCompatActivity {
     }
 
     private void saveExpense() {
-        String amount = etAmount.getText().toString();
+        String amountText = etAmount.getText().toString();
         String category = spCategory.getSelectedItem().toString();
         String date = etDate.getText().toString();
         String description = etDescription.getText().toString();
 
-        if (!amount.isEmpty() && !category.isEmpty() && !date.isEmpty()) {
-            Expense newExpense = new Expense(0, amount, category, date);
-            expenseRepository.addExpense(newExpense);
-            Toast.makeText(this, "Expense added!", Toast.LENGTH_SHORT).show();
-            finish();  // Close the activity after saving
+        if (!amountText.isEmpty() && !category.isEmpty() && !date.isEmpty() && !description.isEmpty()) {
+            try {
+                double amount = Double.parseDouble(amountText);
+                Expense newExpense = new Expense(0, description, category, date, amount);
+                expenseRepository.addExpense(newExpense);
+                Toast.makeText(this, "Expense added!", Toast.LENGTH_SHORT).show();
+                finish();  // Close the activity after saving
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
         }

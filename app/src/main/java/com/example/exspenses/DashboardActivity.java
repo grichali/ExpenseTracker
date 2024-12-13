@@ -21,20 +21,30 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.button.MaterialButton;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class DashboardActivity extends AppCompatActivity {
     private BarChart barChart;
     private PieChart pieChart;
     private MaterialButton addExpenseFab;
     private TextView totalBalanceText;
+    private BudgetRepository budgetRepository;
+
+    private ExpenseRepository expenseRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
+        budgetRepository = new BudgetRepository(this);
+        expenseRepository = new ExpenseRepository(this);
         barChart = findViewById(R.id.bar_chart);
         pieChart = findViewById(R.id.pie_chart);
         totalBalanceText = findViewById(R.id.total_balance_text);
@@ -66,43 +76,72 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void setDynamicData() {
-        // Hardcoded Budget Data
-        Budget budget = new Budget(1, 500.00, "2024-12-01", "2024-12-07");
-        String budgetInfo = "Budget: $" + budget.getAmount() + " (" + budget.getStartDate() + " to " + budget.getEndDate() + ")";
+        // Fetch budget data from the database
+        Budget budget = budgetRepository.getLatestBudget();
+        if (budget != null) {
+            String budgetInfo = "Budget: $" + budget.getAmount() + " (" + budget.getStartDate() + " to " + budget.getEndDate() + ")";
+            TextView budgetTextView = findViewById(R.id.budget_text_view);
+            budgetTextView.setText(budgetInfo);
+        } else {
+            // Handle case where no budget exists
+            TextView budgetTextView = findViewById(R.id.budget_text_view);
+            budgetTextView.setText("No budget available");
+        }
 
-        // Update UI with budget info
-        TextView budgetTextView = findViewById(R.id.budget_text_view); // Add a TextView in your XML for this
-        budgetTextView.setText(budgetInfo);
+        // Fetch expenses data from the database
+        List<Expense> expenses = expenseRepository.getAllExpenses();
+        if (expenses != null && !expenses.isEmpty()) {
+            // Process data for bar chart (group expenses by month)
+            Map<String, Float> monthlyExpenses = new HashMap<>();
+            for (Expense expense : expenses) {
+                String month = getMonthFromDate(expense.getDate()); // Helper method to extract the month
+                monthlyExpenses.put(month, monthlyExpenses.getOrDefault(month, 0f) + (float) expense.getAmount() );
+            }
 
-        // Hardcoded Expenses Data
-        List<Expense> expenses = new ArrayList<>();
-        expenses.add(new Expense(1, "Lunch", "Food", "2024-12-01"));
-        expenses.add(new Expense(2, "Bus Ticket", "Transport", "2024-12-02"));
-        expenses.add(new Expense(3, "Netflix Subscription", "Entertainment", "2024-12-03"));
+            List<BarEntry> barEntries = new ArrayList<>();
+            String[] months = {"Jan", "Feb", "Mar", "Apr", "Jun"};
+            for (int i = 0; i < months.length; i++) {
+                barEntries.add(new BarEntry(i, monthlyExpenses.getOrDefault(months[i], 0f)));
+            }
 
-        // Data for the bar chart (monthly expenses)
-        List<BarEntry> barEntries = new ArrayList<>();
-        barEntries.add(new BarEntry(0, 1200)); // January
-        barEntries.add(new BarEntry(1, 1500)); // February
-        barEntries.add(new BarEntry(2, 1100)); // March
-        barEntries.add(new BarEntry(3, 1900)); // April
-        barEntries.add(new BarEntry(4, 2000)); // Jun
+            setupBarChart(barEntries);
 
-        // Data for the pie chart (expense categories)
-        List<PieEntry> pieEntries = new ArrayList<>();
-        pieEntries.add(new PieEntry(500, "Food"));
-        pieEntries.add(new PieEntry(300, "Transport"));
-        pieEntries.add(new PieEntry(400, "Entertainment"));
-        pieEntries.add(new PieEntry(200, "Utilities"));
+            // Process data for pie chart (group expenses by category)
+            Map<String, Float> categoryExpenses = new HashMap<>();
+            for (Expense expense : expenses) {
+                categoryExpenses.put(expense.getCategory(), categoryExpenses.getOrDefault(expense.getCategory(), 0f) + (float)expense.getAmount());
+            }
 
-        // Total balance data
-        String totalBalance = "$5,420.50";
+            List<PieEntry> pieEntries = new ArrayList<>();
+            for (Map.Entry<String, Float> entry : categoryExpenses.entrySet()) {
+                pieEntries.add(new PieEntry(entry.getValue(), entry.getKey()));
+            }
 
-        // Update UI with the data
-        totalBalanceText.setText(totalBalance);
-        setupBarChart(barEntries);
-        setupPieChart(pieEntries);
+            setupPieChart(pieEntries);
+        } else {
+            // Handle case where no expenses exist
+            setupBarChart(new ArrayList<>());
+            setupPieChart(new ArrayList<>());
+        }
+
+        // Fetch and display total balance
+        double totalBalance = expenseRepository.calculateTotalBalance(); // Ensure you have a method in ExpenseRepository for this
+        totalBalanceText.setText("$" + totalBalance);
     }
+
+    // Helper method to extract the month name from a date string
+    private String getMonthFromDate(String date) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date parsedDate = dateFormat.parse(date);
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
+            return monthFormat.format(parsedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
     private void setupBarChart(List<BarEntry> entries) {
         BarDataSet dataSet = new BarDataSet(entries, "Monthly Expenses");
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);

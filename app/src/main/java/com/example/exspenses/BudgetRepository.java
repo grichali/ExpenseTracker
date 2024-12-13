@@ -1,5 +1,6 @@
 package com.example.exspenses;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -34,29 +35,43 @@ public class BudgetRepository {
         Cursor cursor = database.query("budgets", null, null, null, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            int idColumnIndex = cursor.getColumnIndex("id");
-            int amountColumnIndex = cursor.getColumnIndex("amount");
-            int startDateColumnIndex = cursor.getColumnIndex("startDate");
-            int endDateColumnIndex = cursor.getColumnIndex("endDate");
+            do {
+                @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+                @SuppressLint("Range") double amount = cursor.getDouble(cursor.getColumnIndex("amount"));
+                @SuppressLint("Range") String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
+                @SuppressLint("Range") String endDate = cursor.getString(cursor.getColumnIndex("endDate"));
 
-            if (idColumnIndex != -1 && amountColumnIndex != -1 && startDateColumnIndex != -1 && endDateColumnIndex != -1) {
-                do {
-                    int budgetId = cursor.getInt(idColumnIndex);
-                    double amount = cursor.getDouble(amountColumnIndex);
-                    String startDate = cursor.getString(startDateColumnIndex);
-                    String endDate = cursor.getString(endDateColumnIndex);
-
-                    Budget budget = new Budget(budgetId, amount, startDate, endDate);
-                    budgets.add(budget);
-                } while (cursor.moveToNext());
-            } else {
-                Log.e("DBHelper", "One or more columns are missing from the cursor.");
-            }
-
+                budgets.add(new Budget(id, amount, startDate, endDate));
+            } while (cursor.moveToNext());
             cursor.close();
         }
 
         return budgets;
+    }
+
+    // Get the most recent budget
+    public Budget getLatestBudget() {
+        Cursor cursor = database.query(
+                "budgets",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "endDate DESC",
+                "1"
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+            @SuppressLint("Range") double amount = cursor.getDouble(cursor.getColumnIndex("amount"));
+            @SuppressLint("Range") String startDate = cursor.getString(cursor.getColumnIndex("startDate"));
+            @SuppressLint("Range") String endDate = cursor.getString(cursor.getColumnIndex("endDate"));
+            cursor.close();
+            return new Budget(id, amount, startDate, endDate);
+        }
+
+        return null; // No budgets found
     }
 
     // Update the budget

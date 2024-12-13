@@ -6,18 +6,19 @@ public class Expense {
     private String name;
     private String category;
     private String date;
+    private double amount; // Added amount field
 
-    public Expense(int id, String name, String category, String date) {
+    public Expense(int id, String name, String category, String date, double amount) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.date = date;
+        this.amount = amount; // Initialize amount
     }
 
     public int getId() {
         return id;
     }
-
 
     public String getName() {
         return name;
@@ -29,6 +30,10 @@ public class Expense {
 
     public String getDate() {
         return date;
+    }
+
+    public double getAmount() {
+        return amount; // Getter for amount
     }
 
     public void setId(int id) {
@@ -45,5 +50,9 @@ public class Expense {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 }
