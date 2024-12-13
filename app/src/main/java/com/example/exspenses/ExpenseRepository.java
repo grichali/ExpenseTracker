@@ -89,8 +89,14 @@ public class ExpenseRepository {
             int totalColumnIndex = cursor.getColumnIndex("total");
             if (totalColumnIndex != -1) {
                 total = cursor.getDouble(totalColumnIndex);
+                Log.d("ExpenseRepository", "Calculated total: " + total);
+
             }
             cursor.close();
+        }
+        else {
+            Log.e("ExpenseRepository", "Cursor is null or empty.");
+
         }
 
         return total;

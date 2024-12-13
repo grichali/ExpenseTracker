@@ -2,6 +2,7 @@ package com.example.exspenses;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
@@ -75,6 +76,16 @@ public class DashboardActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Check if data needs to be refreshed
+        if (getIntent().getBooleanExtra("refresh_dashboard", false)) {
+            setDynamicData();  // Refresh the data
+        }
+    }
+
     private void setDynamicData() {
         // Fetch budget data from the database
         Budget budget = budgetRepository.getLatestBudget();
@@ -97,6 +108,7 @@ public class DashboardActivity extends AppCompatActivity {
                 String month = getMonthFromDate(expense.getDate()); // Helper method to extract the month
                 monthlyExpenses.put(month, monthlyExpenses.getOrDefault(month, 0f) + (float) expense.getAmount() );
             }
+            Log.d("DashboardActivity", "Monthly Expenses: " + monthlyExpenses);
 
             List<BarEntry> barEntries = new ArrayList<>();
             String[] months = {"Jan", "Feb", "Mar", "Apr", "Jun"};
@@ -111,11 +123,14 @@ public class DashboardActivity extends AppCompatActivity {
             for (Expense expense : expenses) {
                 categoryExpenses.put(expense.getCategory(), categoryExpenses.getOrDefault(expense.getCategory(), 0f) + (float)expense.getAmount());
             }
+            Log.d("DashboardActivity", "Bar Entries: " + barEntries);
 
             List<PieEntry> pieEntries = new ArrayList<>();
             for (Map.Entry<String, Float> entry : categoryExpenses.entrySet()) {
                 pieEntries.add(new PieEntry(entry.getValue(), entry.getKey()));
             }
+            Log.d("DashboardActivity", "Category Expenses: " + categoryExpenses);
+            Log.d("DashboardActivity", "Pie Entries: " + pieEntries);
 
             setupPieChart(pieEntries);
         } else {
@@ -130,17 +145,20 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     // Helper method to extract the month name from a date string
-    private String getMonthFromDate(String date) {
+    public String getMonthFromDate(String dateString) {
+        // Define the expected format
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); // Adjust to match your date format
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            Date parsedDate = dateFormat.parse(date);
-            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
-            return monthFormat.format(parsedDate);
+            Date date = format.parse(dateString); // Parse the date
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM"); // "MMM" will give you a three-letter month abbreviation like "Jan", "Feb", etc.
+            return monthFormat.format(date); // Return the month in abbreviated form (e.g., Jan, Feb, Mar)
         } catch (ParseException e) {
             e.printStackTrace();
-            return "";
+            Log.e("DashboardActivity", "Error parsing date: " + dateString);
+            return "";  // Return empty string in case of error
         }
     }
+
 
     private void setupBarChart(List<BarEntry> entries) {
         BarDataSet dataSet = new BarDataSet(entries, "Monthly Expenses");

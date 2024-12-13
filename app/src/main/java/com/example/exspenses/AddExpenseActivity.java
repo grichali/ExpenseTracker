@@ -76,9 +76,13 @@ public class AddExpenseActivity extends AppCompatActivity {
                 Expense newExpense = new Expense(0, description, category, date, amount);
                 expenseRepository.addExpense(newExpense);
                 Toast.makeText(this, "Expense added!", Toast.LENGTH_SHORT).show();
+
+                // Notify the DashboardActivity to refresh its data
                 Intent intent = new Intent(AddExpenseActivity.this, DashboardActivity.class);
+                intent.putExtra("refresh_dashboard", true);
                 startActivity(intent);
-                finish();  // Close the activity after saving
+                finish();  // Optionally close the current activity
+
             } catch (NumberFormatException e) {
                 Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT).show();
             }
@@ -86,4 +90,5 @@ public class AddExpenseActivity extends AppCompatActivity {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
         }
     }
+
 }
