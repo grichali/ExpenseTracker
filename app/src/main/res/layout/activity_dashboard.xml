@@ -28,15 +28,15 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Main Scrollable Content -->
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="96dp"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -44,48 +44,48 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/view_history_fab"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View History"
                         android:layout_marginEnd="8dp"
+                        android:text="View History"
+                        android:textColor="#2E7D32"
                         app:icon="@android:drawable/ic_menu_recent_history"
                         app:iconGravity="textStart"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:textColor="#2E7D32"
-                        app:strokeColor="#2E7D32"/>
+                        app:strokeColor="#2E7D32" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/view_budget_fab"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View Budget"
                         android:layout_marginEnd="8dp"
+                        android:text="View Budget"
+                        android:textColor="#2E7D32"
                         app:icon="@android:drawable/ic_menu_edit"
                         app:iconGravity="textStart"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:textColor="#2E7D32"
-                        app:strokeColor="#2E7D32"/>
+                        app:strokeColor="#2E7D32" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/add_expense_fab"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Add Expense"
-                        app:icon="@android:drawable/ic_input_add"
-                        app:iconGravity="textStart"
                         android:backgroundTint="#4CAF50"
-                        android:textColor="@android:color/white"/>
+                        android:text="Add Expense"
+                        android:textColor="@android:color/white"
+                        app:icon="@android:drawable/ic_input_add"
+                        app:iconGravity="textStart" />
                 </LinearLayout>
             </HorizontalScrollView>
 
@@ -94,10 +94,10 @@
                 android:id="@+id/balance_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FFFFFF">
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -110,7 +110,7 @@
                         android:layout_height="wrap_content"
                         android:text="Total Balance"
                         android:textColor="#4CAF50"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/total_balance_text"
@@ -119,15 +119,16 @@
                         android:text="$5,420.50"
                         android:textColor="#2E7D32"
                         android:textSize="24sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
+
                     <TextView
                         android:id="@+id/budget_text_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="Budget: $500.00 (2024-12-01 to 2024-12-07)"
                         android:textColor="#2E7D32"
-                        android:textSize="16sp"
-                        android:layout_marginTop="8dp"/>
+                        android:textSize="16sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -135,10 +136,10 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FFFFFF">
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -149,15 +150,15 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
                         android:text="Expense Overview"
                         android:textColor="#4CAF50"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="8dp"/>
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.BarChart
                         android:id="@+id/bar_chart"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -165,9 +166,9 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
+                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="#FFFFFF">
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -178,17 +179,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
                         android:text="Category Breakdown"
                         android:textColor="#4CAF50"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="8dp"/>
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/pie_chart"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
