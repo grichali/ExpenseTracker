@@ -6,14 +6,14 @@ public class Expense {
     private String name;
     private String category;
     private String date;
-    private double amount; // Added amount field
+    private double amount;
 
     public Expense(int id, String name, String category, String date, double amount) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.date = date;
-        this.amount = amount; // Initialize amount
+        this.amount = amount;
     }
 
     public int getId() {

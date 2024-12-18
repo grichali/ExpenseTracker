@@ -34,32 +34,25 @@ public class BudgetActivity extends AppCompatActivity {
         budgetContainer = findViewById(R.id.budget_container);
         addBudgetFab = findViewById(R.id.add_budget_fab);
 
-        // Initialize the repository
         budgetRepository = new BudgetRepository(this);
 
-        // Fetch all budgets from the database and display them
         List<Budget> budgets = getBudgetsFromDatabase();
         displayBudgets(budgets);
 
-        // Add new budget functionality
         addBudgetFab.setOnClickListener(v -> showAddBudgetDialog());
 
-        // Initialize the calendar for date picker
         final Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Null check before finding views
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) EditText startDateEditText = findViewById(R.id.edit_start_date);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) EditText endDateEditText = findViewById(R.id.edit_end_date);
 
-        // Additional null checks
         if (startDateEditText != null) {
             startDateEditText.setOnClickListener(v -> {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                         (view, selectedYear, selectedMonth, selectedDayOfMonth) -> {
-                            // Format the date in yyyy-MM-dd format
                             startDateEditText.setText(String.format("%d-%02d-%02d",
                                     selectedYear, selectedMonth + 1, selectedDayOfMonth));
                         }, year, month, day);
@@ -71,7 +64,6 @@ public class BudgetActivity extends AppCompatActivity {
             endDateEditText.setOnClickListener(v -> {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                         (view, selectedYear, selectedMonth, selectedDayOfMonth) -> {
-                            // Format the date in yyyy-MM-dd format
                             endDateEditText.setText(String.format("%d-%02d-%02d",
                                     selectedYear, selectedMonth + 1, selectedDayOfMonth));
                         }, year, month, day);
@@ -80,46 +72,37 @@ public class BudgetActivity extends AppCompatActivity {
         }
     }
 
-    // Fetch all budgets from the database
     private List<Budget> getBudgetsFromDatabase() {
-        return budgetRepository.getAllBudgets();  // Get all budgets from the database
+        return budgetRepository.getAllBudgets();
     }
 
-    // Display the list of budgets
-// Display the list of budgets
     private void displayBudgets(List<Budget> budgets) {
-        budgetContainer.removeAllViews();  // Clear the current list
+        budgetContainer.removeAllViews();
         for (Budget budget : budgets) {
             View budgetView = LayoutInflater.from(this).inflate(R.layout.activity_item_budget, budgetContainer, false);
 
-            // Bind the views - use TextView
             TextView amountTextView = budgetView.findViewById(R.id.budget_amount);
             TextView dateRangeTextView = budgetView.findViewById(R.id.budget_date_range);
             Button editButton = budgetView.findViewById(R.id.edit_button);
             Button removeButton = budgetView.findViewById(R.id.remove_button);
 
-            // Set the initial values
             amountTextView.setText(String.format("$%.2f", budget.getAmount()));
             dateRangeTextView.setText(budget.getStartDate() + " to " + budget.getEndDate());
 
-            // Edit Button click listener
             editButton.setOnClickListener(v -> showEditBudgetDialog(budget));
 
-            // Remove Button click listener
             removeButton.setOnClickListener(v -> {
                 removeBudget(budget);
-                budgetContainer.removeView(budgetView);  // Remove the budget view from the UI
+                budgetContainer.removeView(budgetView);
             });
 
             budgetContainer.addView(budgetView);
         }
     }
-    // Show the dialog to add a new budget
     private void showAddBudgetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add New Budget");
 
-        // Inflate the layout for the dialog
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_budget, null);
         builder.setView(dialogView);
 
@@ -139,7 +122,6 @@ public class BudgetActivity extends AppCompatActivity {
                 String startDate = startDateEditText.getText().toString();
                 String endDate = endDateEditText.getText().toString();
 
-                // Create a new budget and add it to the database
                 Budget newBudget = new Budget(0, amount, startDate, endDate);
                 long newBudgetId = budgetRepository.addBudget(newBudget);
                 if (newBudgetId != -1) {
@@ -159,12 +141,10 @@ public class BudgetActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // Show the dialog to edit an existing budget
     private void showEditBudgetDialog(Budget budget) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Edit Budget");
 
-        // Inflate the layout for the dialog
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_budget, null);
         builder.setView(dialogView);
 
@@ -172,18 +152,15 @@ public class BudgetActivity extends AppCompatActivity {
         EditText startDateEditText = dialogView.findViewById(R.id.edit_start_date);
         EditText endDateEditText = dialogView.findViewById(R.id.edit_end_date);
 
-        // Pre-fill the existing values
         amountEditText.setText(String.valueOf(budget.getAmount()));
         startDateEditText.setText(budget.getStartDate());
         endDateEditText.setText(budget.getEndDate());
 
         builder.setPositiveButton("Save", (dialog, which) -> {
-            // Get the updated values from the input fields
             double updatedAmount = Double.parseDouble(amountEditText.getText().toString());
             String updatedStartDate = startDateEditText.getText().toString();
             String updatedEndDate = endDateEditText.getText().toString();
 
-            // Update the budget in the database
             budget.setAmount(updatedAmount);
             budget.setStartDate(updatedStartDate);
             budget.setEndDate(updatedEndDate);
@@ -191,7 +168,7 @@ public class BudgetActivity extends AppCompatActivity {
 
             if (rowsUpdated > 0) {
                 Toast.makeText(BudgetActivity.this, "Budget Updated", Toast.LENGTH_SHORT).show();
-                displayBudgets(getBudgetsFromDatabase());  // Refresh the list
+                displayBudgets(getBudgetsFromDatabase());
             } else {
                 Toast.makeText(BudgetActivity.this, "Error Updating Budget", Toast.LENGTH_SHORT).show();
             }
@@ -202,12 +179,11 @@ public class BudgetActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // Remove a budget from the database
     private void removeBudget(Budget budget) {
         int rowsDeleted = budgetRepository.removeBudget(budget.getId());
         if (rowsDeleted > 0) {
             Toast.makeText(this, "Budget Removed", Toast.LENGTH_SHORT).show();
-            displayBudgets(getBudgetsFromDatabase());  // Refresh the list
+            displayBudgets(getBudgetsFromDatabase());
         } else {
             Toast.makeText(this, "Error Removing Budget", Toast.LENGTH_SHORT).show();
         }

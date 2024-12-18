@@ -58,7 +58,6 @@ public class DashboardActivity extends AppCompatActivity {
         Button viewHistoryButton = findViewById(R.id.view_history_fab);
 
         viewHistoryButton.setOnClickListener(v -> {
-            // Create an Intent to open ExpenseHistoryActivity
             Intent intent = new Intent(DashboardActivity.this, ExpenseHistoryActivity.class);
             startActivity(intent);
         });
@@ -66,7 +65,6 @@ public class DashboardActivity extends AppCompatActivity {
 
         Button viewBudgetButton = findViewById(R.id.view_budget_fab);
 
-        // Set the OnClickListener to navigate to BudgetActivity
         viewBudgetButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, BudgetActivity.class);
             startActivity(intent);
@@ -80,29 +78,24 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // Check if data needs to be refreshed
         if (getIntent().getBooleanExtra("refresh_dashboard", false)) {
-            setDynamicData();  // Refresh the data
+            setDynamicData();
         }
     }
 
     private void setDynamicData() {
-        // Fetch budget data from the database
         Budget budget = budgetRepository.getLatestBudget();
         if (budget != null) {
             String budgetInfo = "Budget: $" + budget.getAmount() + " (" + budget.getStartDate() + " to " + budget.getEndDate() + ")";
             TextView budgetTextView = findViewById(R.id.budget_text_view);
             budgetTextView.setText(budgetInfo);
         } else {
-            // Handle case where no budget exists
             TextView budgetTextView = findViewById(R.id.budget_text_view);
             budgetTextView.setText("No budget available");
         }
 
-        // Fetch expenses data from the database
         List<Expense> expenses = expenseRepository.getAllExpenses();
         if (expenses != null && !expenses.isEmpty()) {
-            // Process data for bar chart (group expenses by month)
             Map<String, Float> monthlyExpenses = new HashMap<>();
             for (Expense expense : expenses) {
                 String month = getMonthFromDate(expense.getDate()); // Helper method to extract the month
@@ -121,7 +114,6 @@ public class DashboardActivity extends AppCompatActivity {
 
             setupBarChart(barEntries);
 
-            // Process data for pie chart (group expenses by category)
             Map<String, Float> categoryExpenses = new HashMap<>();
             for (Expense expense : expenses) {
                 categoryExpenses.put(expense.getCategory(), categoryExpenses.getOrDefault(expense.getCategory(), 0f) + (float)expense.getAmount());
@@ -137,19 +129,15 @@ public class DashboardActivity extends AppCompatActivity {
 
             setupPieChart(pieEntries);
         } else {
-            // Handle case where no expenses exist
             setupBarChart(new ArrayList<>());
             setupPieChart(new ArrayList<>());
         }
 
-        // Fetch and display total balance
-        double totalBalance = expenseRepository.calculateTotalBalance(); // Ensure you have a method in ExpenseRepository for this
+        double totalBalance = expenseRepository.calculateTotalBalance();
         totalBalanceText.setText("$" + totalBalance);
     }
 
-    // Helper method to extract the month name from a date string
     public String getMonthFromDate(String dateString) {
-        // Define the expected format
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Date date = format.parse(dateString);
@@ -174,7 +162,6 @@ public class DashboardActivity extends AppCompatActivity {
         barChart.setData(barData);
         barChart.getDescription().setEnabled(false);
 
-        // X-axis customization
         XAxis xAxis = barChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(new String[]{"Jan", "Feb", "Mar", "Apr","Jun"}));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);

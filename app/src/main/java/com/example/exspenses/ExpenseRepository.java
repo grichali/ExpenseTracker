@@ -20,7 +20,6 @@ public class ExpenseRepository {
         database = dbHelper.getWritableDatabase();
     }
 
-    // Add a new expense
     public long addExpense(Expense expense) {
         ContentValues values = new ContentValues();
         values.put("name", expense.getName());
@@ -31,7 +30,6 @@ public class ExpenseRepository {
         return database.insert(TABLE_NAME, null, values);
     }
 
-    // Get all expenses
     public List<Expense> getAllExpenses() {
         List<Expense> expenses = new ArrayList<>();
         Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
@@ -64,7 +62,6 @@ public class ExpenseRepository {
         return expenses;
     }
 
-    // Update an expense
     public int updateExpense(Expense expense) {
         ContentValues values = new ContentValues();
         values.put("name", expense.getName());
@@ -75,12 +72,10 @@ public class ExpenseRepository {
         return database.update(TABLE_NAME, values, "id = ?", new String[]{String.valueOf(expense.getId())});
     }
 
-    // Remove an expense
     public int removeExpense(int expenseId) {
         return database.delete(TABLE_NAME, "id = ?", new String[]{String.valueOf(expenseId)});
     }
 
-    // Get total amount of all expenses
     public double calculateTotalBalance() {
         double total = 0;
         Cursor cursor = database.rawQuery("SELECT SUM(amount) AS total FROM " + TABLE_NAME, null);
@@ -102,7 +97,6 @@ public class ExpenseRepository {
         return total;
     }
 
-    // Get expenses by category
     public List<Expense> getExpensesByCategory(String category) {
         List<Expense> expenses = new ArrayList<>();
         Cursor cursor = database.query(TABLE_NAME, null, "category = ?", new String[]{category}, null, null, null);
@@ -122,7 +116,6 @@ public class ExpenseRepository {
         return expenses;
     }
 
-    // Close the database
     public void close() {
         dbHelper.close();
     }

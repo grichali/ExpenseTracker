@@ -30,17 +30,14 @@ public class AddExpenseActivity extends AppCompatActivity {
         etDescription = findViewById(R.id.etDescription);
         spCategory = findViewById(R.id.spCategory);
 
-        // Get the categories from strings.xml
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
-                R.array.expense_categories, // Name of the string array in strings.xml
-                android.R.layout.simple_spinner_item // Default layout for each item in the spinner
+                R.array.expense_categories,
+                android.R.layout.simple_spinner_item
         );
 
-        // Specify the layout for the dropdown items
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        // Apply the adapter to the spinner
         spCategory.setAdapter(adapter);
 
         btnSave = findViewById(R.id.btnSave);
@@ -54,7 +51,6 @@ public class AddExpenseActivity extends AppCompatActivity {
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(AddExpenseActivity.this,
                     (view, selectedYear, selectedMonth, selectedDay) -> {
-                        // Format and set the date in the EditText
                         String date = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
                         etDate.setText(date);
                     }, year, month, day);
@@ -77,11 +73,10 @@ public class AddExpenseActivity extends AppCompatActivity {
                 expenseRepository.addExpense(newExpense);
                 Toast.makeText(this, "Expense added!", Toast.LENGTH_SHORT).show();
 
-                // Notify the DashboardActivity to refresh its data
                 Intent intent = new Intent(AddExpenseActivity.this, DashboardActivity.class);
                 intent.putExtra("refresh_dashboard", true);
                 startActivity(intent);
-                finish();  // Optionally close the current activity
+                finish();
 
             } catch (NumberFormatException e) {
                 Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT).show();

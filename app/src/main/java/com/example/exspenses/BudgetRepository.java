@@ -19,7 +19,6 @@ public class BudgetRepository {
         database = dbHelper.getWritableDatabase();
     }
 
-    // Add a new budget
     public long addBudget(Budget budget) {
         ContentValues values = new ContentValues();
         values.put("amount", budget.getAmount());
@@ -29,7 +28,6 @@ public class BudgetRepository {
         return database.insert("budgets", null, values);
     }
 
-    // Get all budgets
     public List<Budget> getAllBudgets() {
         List<Budget> budgets = new ArrayList<>();
         Cursor cursor = database.query("budgets", null, null, null, null, null, null);
@@ -49,7 +47,6 @@ public class BudgetRepository {
         return budgets;
     }
 
-    // Get the most recent budget
     public Budget getLatestBudget() {
         Cursor cursor = database.query(
                 "budgets",
@@ -71,10 +68,9 @@ public class BudgetRepository {
             return new Budget(id, amount, startDate, endDate);
         }
 
-        return null; // No budgets found
+        return null;
     }
 
-    // Update the budget
     public int updateBudget(Budget budget) {
         ContentValues values = new ContentValues();
         values.put("amount", budget.getAmount());
@@ -84,12 +80,10 @@ public class BudgetRepository {
         return database.update("budgets", values, "id = ?", new String[]{String.valueOf(budget.getId())});
     }
 
-    // Remove a budget
     public int removeBudget(int budgetId) {
         return database.delete("budgets", "id = ?", new String[]{String.valueOf(budgetId)});
     }
 
-    // Close the database
     public void close() {
         dbHelper.close();
     }

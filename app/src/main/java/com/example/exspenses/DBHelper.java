@@ -9,7 +9,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "database";
     private static final int DATABASE_VERSION = 1;
 
-    // Expense table creation
     private static final String CREATE_EXPENSE_TABLE = "CREATE TABLE expenses (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "name TEXT," +
@@ -18,7 +17,6 @@ public class DBHelper extends SQLiteOpenHelper {
             "amount REAL"+
             ");";
 
-    // Budget table creation
     private static final String CREATE_BUDGET_TABLE = "CREATE TABLE budgets (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "amount REAL," +

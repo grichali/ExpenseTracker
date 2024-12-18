@@ -28,7 +28,6 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
         expensesContainer = findViewById(R.id.expenses_container);
         expenseRepository = new ExpenseRepository(this);
 
-        // Fetch all expenses from the database
         List<Expense> expenses = expenseRepository.getAllExpenses();
         displayExpenses(expenses);
     }
@@ -48,11 +47,11 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
             dateTextView.setText(expense.getDate());
 
             editButton.setOnClickListener(v -> {
-                showEditDialog(expense); // Implement edit logic here
+                showEditDialog(expense);
             });
 
             removeButton.setOnClickListener(v -> {
-                confirmRemoveExpense(expense, expenseView); // Remove with confirmation
+                confirmRemoveExpense(expense, expenseView);
             });
 
             expensesContainer.addView(expenseView);
@@ -73,7 +72,6 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
     }
 
     private void showEditDialog(Expense expense) {
-        // Create the EditTexts for the name, category, and date
         final EditText nameEditText = new EditText(this);
         nameEditText.setText(expense.getName());
 
@@ -83,12 +81,10 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
         final EditText dateEditText = new EditText(this);
         dateEditText.setText(expense.getDate());
 
-        // Create the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Edit Expense");
         builder.setMessage("Edit the expense details");
 
-        // Set the layout for the dialog
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.addView(nameEditText);
@@ -97,24 +93,18 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
 
         builder.setView(layout);
 
-        // Handle the Save button click
         builder.setPositiveButton("Save", (dialog, which) -> {
-            // Update the expense object
             expense.setName(nameEditText.getText().toString());
             expense.setCategory(categoryEditText.getText().toString());
             expense.setDate(dateEditText.getText().toString());
 
-            // Save the updated expense
             expenseRepository.updateExpense(expense);
 
-            // Show a Toast with the updated data
             Toast.makeText(this, "Expense updated: " + expense.getName(), Toast.LENGTH_SHORT).show();
 
-            // Refresh the expenses list and UI
             refreshExpensesUI();
         });
 
-        // Handle the Cancel button click
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
         builder.show();
@@ -122,7 +112,7 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
 
     private void refreshExpensesUI() {
         expensesContainer.removeAllViews();
-        List<Expense> updatedExpenses = expenseRepository.getAllExpenses();  // Get updated data
-        displayExpenses(updatedExpenses);  // Display the updated list
+        List<Expense> updatedExpenses = expenseRepository.getAllExpenses();
+        displayExpenses(updatedExpenses);
     }
 }

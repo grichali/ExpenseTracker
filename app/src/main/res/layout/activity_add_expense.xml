@@ -6,7 +6,6 @@
     android:padding="16dp"
     android:background="#F5F5F5">
 
-    <!-- Title -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
@@ -17,7 +16,6 @@
         android:layout_gravity="center"
         android:paddingBottom="16dp" />
 
-    <!-- Expense Amount -->
     <EditText
         android:id="@+id/etAmount"
         android:layout_width="match_parent"
@@ -28,7 +26,6 @@
         android:background="@drawable/edittext_background"
         android:layout_marginBottom="16dp" />
 
-    <!-- Expense Category -->
     <Spinner
         android:id="@+id/spCategory"
         android:layout_width="match_parent"
@@ -37,7 +34,6 @@
         android:padding="12dp"
         android:background="@drawable/edittext_background" />
 
-    <!-- Date Picker -->
     <EditText
         android:id="@+id/etDate"
         android:layout_width="match_parent"
@@ -49,7 +45,6 @@
         android:background="@drawable/edittext_background"
         android:layout_marginBottom="16dp" />
 
-    <!-- Expense Description -->
     <EditText
         android:id="@+id/etDescription"
         android:layout_width="match_parent"
@@ -60,7 +55,6 @@
         android:background="@drawable/ic_gradient_background"
         android:layout_marginBottom="16dp" />
 
-    <!-- Save Button -->
     <Button
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
